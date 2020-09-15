@@ -1,0 +1,684 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<title>Exported from Notepad++</title>
+<style type="text/css">
+span {
+	font-family: 'Courier New';
+	font-size: 10pt;
+	color: #000000;
+}
+.sc0 {
+	font-weight: bold;
+}
+.sc1 {
+	color: #0000FF;
+}
+.sc3 {
+	color: #FF0000;
+}
+.sc5 {
+	color: #FF0000;
+}
+.sc6 {
+	font-weight: bold;
+	color: #8000FF;
+}
+.sc8 {
+}
+.sc9 {
+	color: #008000;
+}
+.sc19 {
+	color: #FF8000;
+	background: #FEFDE0;
+}
+.sc21 {
+	background: #A6CAF0;
+}
+.sc26 {
+}
+.sc40 {
+}
+.sc41 {
+	background: #F2F4FF;
+}
+.sc42 {
+	color: #008000;
+	background: #F2F4FF;
+}
+.sc43 {
+	color: #008000;
+	background: #F2F4FF;
+}
+.sc44 {
+	color: #008080;
+	background: #F2F4FF;
+}
+.sc45 {
+	color: #FF0000;
+	background: #F2F4FF;
+}
+.sc46 {
+	background: #F2F4FF;
+}
+.sc47 {
+	font-weight: bold;
+	font-style: italic;
+	color: #000080;
+	background: #F2F4FF;
+}
+.sc48 {
+	color: #808080;
+	background: #F2F4FF;
+}
+.sc50 {
+	font-weight: bold;
+	background: #F2F4FF;
+}
+</style>
+</head>
+<body>
+<div style="float: left; white-space: pre; line-height: 1; background: #FFFFFF; "><span class="sc21">&lt;!</span><span class="sc26">DOCTYPE html</span><span class="sc21">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;meta</span><span class="sc8"> </span><span class="sc3">charset</span><span class="sc8">=</span><span class="sc6">"UTF-8"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;html&gt;</span><span class="sc0">
+</span><span class="sc9">&lt;!--
+Created from display.html
+Add more objects to make it realistic 
+Added texture to background
+Adjusted kicking the soccer ball to make it realistic
+--&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;head&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;title&gt;</span><span class="sc0">Kicking an Object</span><span class="sc1">&lt;/title&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;style&gt;</span><span class="sc0">
+body {
+    background-color: #e5e5e5 ;
+}
+ #canvas-holder {
+        float: left;
+        border: thin solid black;
+    }
+ #tools {
+        float: left;
+        margin-left: 20px;
+        padding: 0px 7px;
+        background-color: white;
+        border: thin solid black;
+    }
+    canvas {
+        display: block;
+    }
+    p {
+        margin-top: 15px;
+    }
+    select {
+        margin-left: 30px;
+    }
+}
+
+</span><span class="sc1">&lt;/style</span><span class="sc8">
+</span><span class="sc9">&lt;!-- This shader is exactly as provided --&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">type</span><span class="sc8">=</span><span class="sc6">"x-shader/x-vertex"</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"vshader-source"</span><span class="sc1">&gt;</span><span class="sc40">
+</span><span class="sc46">attribute</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">a_coords</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc46">attribute</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">a_normal</span><span class="sc50">;</span><span class="sc41">   
+</span><span class="sc46">uniform</span><span class="sc41"> </span><span class="sc46">mat4</span><span class="sc41"> </span><span class="sc46">modelview</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc46">uniform</span><span class="sc41"> </span><span class="sc46">mat4</span><span class="sc41"> </span><span class="sc46">projection</span><span class="sc50">;</span><span class="sc41"> 
+  
+</span><span class="sc46">varying</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">v_normal</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc46">varying</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">v_eyeCoords</span><span class="sc50">;</span><span class="sc41">  
+</span><span class="sc47">void</span><span class="sc41"> </span><span class="sc46">main</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">vec4</span><span class="sc41"> </span><span class="sc46">objectCoords</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">vec4</span><span class="sc50">(</span><span class="sc46">a_coords</span><span class="sc50">,</span><span class="sc45">1.0</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">vec4</span><span class="sc41"> </span><span class="sc46">eyeCoords</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">modelview</span><span class="sc41"> </span><span class="sc50">*</span><span class="sc41"> </span><span class="sc46">objectCoords</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">gl_Position</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">projection</span><span class="sc41"> </span><span class="sc50">*</span><span class="sc41"> </span><span class="sc46">eyeCoords</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">v_normal</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">normalize</span><span class="sc50">(</span><span class="sc46">a_normal</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">v_eyeCoords</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">eyeCoords.xyz</span><span class="sc50">/</span><span class="sc46">eyeCoords.w</span><span class="sc50">;</span><span class="sc41">  
+
+</span><span class="sc50">}</span><span class="sc41">
+</span><span class="sc1">&lt;/script&gt;</span><span class="sc0">
+
+</span><span class="sc9">&lt;!-- This shader has simplified lighting model and equation
+Notice the light only has 3 properties now --&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">type</span><span class="sc8">=</span><span class="sc6">"x-shader/x-fragment"</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"fshader-source"</span><span class="sc1">&gt;</span><span class="sc40">
+#</span><span class="sc46">ifdef</span><span class="sc41"> </span><span class="sc46">GL_FRAGMENT_PRECISION_HIGH</span><span class="sc41">
+</span><span class="sc46">precision</span><span class="sc41"> </span><span class="sc46">highp</span><span class="sc41"> </span><span class="sc47">float</span><span class="sc50">;</span><span class="sc41">
+#</span><span class="sc47">else</span><span class="sc41">
+</span><span class="sc46">precision</span><span class="sc41"> </span><span class="sc46">mediump</span><span class="sc41"> </span><span class="sc47">float</span><span class="sc50">;</span><span class="sc41">
+#</span><span class="sc46">endif</span><span class="sc41">
+</span><span class="sc46">struct</span><span class="sc41"> </span><span class="sc46">MaterialProperties</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">vec4</span><span class="sc41"> </span><span class="sc46">diffuseColor</span><span class="sc50">;</span><span class="sc41">      
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">specularColor</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">emissiveColor</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">float</span><span class="sc41"> </span><span class="sc46">specularExponent</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc50">};</span><span class="sc41">
+</span><span class="sc46">struct</span><span class="sc41"> </span><span class="sc46">LightProperties</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">bool</span><span class="sc41"> </span><span class="sc46">enabled</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">vec4</span><span class="sc41"> </span><span class="sc46">position</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">;</span><span class="sc41">       
+</span><span class="sc50">};</span><span class="sc41">
+</span><span class="sc46">uniform</span><span class="sc41"> </span><span class="sc46">MaterialProperties</span><span class="sc41"> </span><span class="sc46">material</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc43">// do two-sided lighting, but assume front and back materials are the same</span><span class="sc41">
+</span><span class="sc46">uniform</span><span class="sc41"> </span><span class="sc46">LightProperties</span><span class="sc41"> </span><span class="sc46">lights</span><span class="sc50">[</span><span class="sc45">4</span><span class="sc50">];</span><span class="sc41">
+</span><span class="sc46">uniform</span><span class="sc41"> </span><span class="sc46">mat3</span><span class="sc41"> </span><span class="sc46">normalMatrix</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc46">varying</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">v_normal</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc46">varying</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">v_eyeCoords</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">lightingEquation</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">LightProperties</span><span class="sc41"> </span><span class="sc46">light</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">MaterialProperties</span><span class="sc41"> </span><span class="sc46">material</span><span class="sc50">,</span><span class="sc41"> 
+</span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">eyeCoords</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">N</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">V</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc43">// N is normal vector, V is direction to viewer.</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">L</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">R</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc43">// Light direction and reflected light direction.      </span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">light.position.w</span><span class="sc41"> </span><span class="sc50">==</span><span class="sc41"> </span><span class="sc45">0.0</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">L</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">normalize</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">light.position.xyz</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">else</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">L</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">normalize</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">light.position.xyz</span><span class="sc50">/</span><span class="sc46">light.position.w</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc41"> </span><span class="sc46">v_eyeCoords</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">            
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">dot</span><span class="sc50">(</span><span class="sc46">L</span><span class="sc50">,</span><span class="sc46">N</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">&lt;=</span><span class="sc41"> </span><span class="sc45">0.0</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">return</span><span class="sc41"> </span><span class="sc46">vec3</span><span class="sc50">(</span><span class="sc45">0.0</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">reflection</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">dot</span><span class="sc50">(</span><span class="sc46">L</span><span class="sc50">,</span><span class="sc46">N</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">*</span><span class="sc41"> </span><span class="sc46">light.color</span><span class="sc41"> </span><span class="sc50">*</span><span class="sc41"> </span><span class="sc46">material.diffuseColor.rgb</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">R</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc46">reflect</span><span class="sc50">(</span><span class="sc46">L</span><span class="sc50">,</span><span class="sc46">N</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">dot</span><span class="sc50">(</span><span class="sc46">R</span><span class="sc50">,</span><span class="sc46">V</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">&gt;</span><span class="sc41"> </span><span class="sc45">0.0</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">float</span><span class="sc41"> </span><span class="sc46">factor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">pow</span><span class="sc50">(</span><span class="sc46">dot</span><span class="sc50">(</span><span class="sc46">R</span><span class="sc50">,</span><span class="sc46">V</span><span class="sc50">),</span><span class="sc46">material.specularExponent</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">reflection</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc46">factor</span><span class="sc41"> </span><span class="sc50">*</span><span class="sc41"> </span><span class="sc46">material.specularColor</span><span class="sc41"> </span><span class="sc50">*</span><span class="sc41"> </span><span class="sc46">light.color</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">return</span><span class="sc41"> </span><span class="sc46">reflection</span><span class="sc50">;</span><span class="sc41">   
+    
+</span><span class="sc50">}</span><span class="sc41">
+</span><span class="sc47">void</span><span class="sc41"> </span><span class="sc46">main</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">normal</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">normalize</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">normalMatrix</span><span class="sc50">*</span><span class="sc46">v_normal</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">viewDirection</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">normalize</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc46">v_eyeCoords</span><span class="sc50">);</span><span class="sc41">  </span><span class="sc43">// (Assumes a perspective projection.)</span><span class="sc41">
+    </span><span class="sc46">vec3</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">material.emissiveColor</span><span class="sc50">;</span><span class="sc41">
+    
+    </span><span class="sc47">for</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc47">int</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">&lt;</span><span class="sc41"> </span><span class="sc45">4</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc50">++)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">].</span><span class="sc46">enabled</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> 
+            </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">gl_FrontFacing</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+                </span><span class="sc46">color</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc46">lightingEquation</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">],</span><span class="sc41"> </span><span class="sc46">material</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">v_eyeCoords</span><span class="sc50">,</span><span class="sc41">
+                </span><span class="sc46">normal</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">viewDirection</span><span class="sc50">);</span><span class="sc41">
+            </span><span class="sc50">}</span><span class="sc41">
+            </span><span class="sc47">else</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+                </span><span class="sc46">color</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc46">lightingEquation</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">],</span><span class="sc41"> </span><span class="sc46">material</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">v_eyeCoords</span><span class="sc50">,</span><span class="sc41">
+                </span><span class="sc50">-</span><span class="sc46">normal</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">viewDirection</span><span class="sc50">);</span><span class="sc41">
+            </span><span class="sc50">}</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">               
+    </span><span class="sc46">gl_FragColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">vec4</span><span class="sc50">(</span><span class="sc46">color</span><span class="sc50">,</span><span class="sc46">material.diffuseColor.a</span><span class="sc50">);</span><span class="sc41">        
+</span><span class="sc50">}</span><span class="sc41">
+</span><span class="sc1">&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"gl-matrix-min.js"</span><span class="sc8"> </span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"trackball-rotator.js"</span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"basic-object-models-IFS.js"</span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"teapot-model-IFS.js"</span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+
+</span><span class="sc1">&lt;script&gt;</span><span class="sc40">
+
+</span><span class="sc48">"use strict"</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">gl</span><span class="sc50">;</span><span class="sc41">   </span><span class="sc43">// The webgl context.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">xval</span><span class="sc50">=-</span><span class="sc45">0.7</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">yval</span><span class="sc50">=-</span><span class="sc45">2.1</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">kval</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">80</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc43">// Legs starting postion</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">a_coords_loc</span><span class="sc50">;</span><span class="sc41">           </span><span class="sc43">// Location of the a_coords attribute variable in the shader program.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">a_normal_loc</span><span class="sc50">;</span><span class="sc41">         </span><span class="sc43">// Location of a_normal attribute </span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">u_modelview</span><span class="sc50">;</span><span class="sc41">       </span><span class="sc43">// Locations for uniform matrices</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">u_projection</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">u_normalMatrix</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">u_material</span><span class="sc50">;</span><span class="sc41">     </span><span class="sc43">// An object tolds uniform locations for the material.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">;</span><span class="sc41">       </span><span class="sc43">// An array of objects that holds uniform locations for light properties.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">projection</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">mat4.create</span><span class="sc50">();</span><span class="sc41">    </span><span class="sc43">// projection matrix</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">modelview</span><span class="sc50">;</span><span class="sc41">                     </span><span class="sc43">// modelview matrix; value comes from rotator</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">normalMatrix</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">mat3.create</span><span class="sc50">();</span><span class="sc41">  </span><span class="sc43">// matrix, derived from modelview matrix, for transforming normal vectors</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">rotator</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc43">// A TrackballRotator to implement rotation by mouse.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">frameNumber</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc43">// frame number during animation (actually only goes up by 0.5 per frame)</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">matrixStack</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[];</span><span class="sc41">           </span><span class="sc43">// A stack of matrices for implementing hierarchical graphics.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">   </span><span class="sc43">// The current diffuseColor; render() functions in the basic objects set</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">objects</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc43">// Lighting </span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">lights</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">   
+    </span><span class="sc46">gl.uniform1i</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">0</span><span class="sc50">].</span><span class="sc46">enabled</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">   
+    </span><span class="sc46">gl.uniform4f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">0</span><span class="sc50">].</span><span class="sc46">position</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41"> </span><span class="sc43">//z</span><span class="sc41">
+    </span><span class="sc46">gl.uniform3f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">0</span><span class="sc50">].</span><span class="sc46">color</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1.0</span><span class="sc50">,</span><span class="sc45">1.0</span><span class="sc50">,</span><span class="sc45">1.0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  
+    
+    </span><span class="sc46">gl.uniform1i</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">enabled</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  
+    </span><span class="sc46">gl.uniform4f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">position</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41"> </span><span class="sc43">//x</span><span class="sc41">
+    </span><span class="sc46">gl.uniform3f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">color</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0.0</span><span class="sc50">,</span><span class="sc45">1.0</span><span class="sc50">,</span><span class="sc45">0.0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  
+    
+    </span><span class="sc46">gl.uniform1i</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">enabled</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  
+    </span><span class="sc46">gl.uniform4f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">position</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41"> </span><span class="sc43">//y</span><span class="sc41">
+    </span><span class="sc46">gl.uniform3f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">color</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1.0</span><span class="sc50">,</span><span class="sc45">0.0</span><span class="sc50">,</span><span class="sc45">1.0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">   
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">// Draw puts everything together</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">draw</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    
+    </span><span class="sc46">mat4.perspective</span><span class="sc50">(</span><span class="sc46">projection</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">Math.PI</span><span class="sc50">/</span><span class="sc45">4</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">50</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.uniformMatrix4fv</span><span class="sc50">(</span><span class="sc46">u_projection</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">projection</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">modelview</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">rotator.getViewMatrix</span><span class="sc50">();</span><span class="sc41">
+    
+    </span><span class="sc46">lights</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">boxman</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">ball</span><span class="sc50">();</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">// Creates our character boxman</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">boxman</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc43">//Head</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">3.4</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">1.1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Neck</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">2.8</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0.35</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Double Neck</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">2.45</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0.35</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.3</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Body</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0.7</span><span class="sc50">,</span><span class="sc45">2</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.6</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">0</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Left Shoulder</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">2</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.6</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Right Shoulder</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.6</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Right Arm</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">0.6</span><span class="sc50">,</span><span class="sc45">2.</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.35</span><span class="sc50">,</span><span class="sc45">0.35</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.6</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Lower Right Arm</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.75</span><span class="sc50">,</span><span class="sc45">1.6</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">95</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.3</span><span class="sc50">,</span><span class="sc45">0.3</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">    
+    </span><span class="sc43">// Right Elbow</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.75</span><span class="sc50">,</span><span class="sc45">0.65</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Left Arm</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">3.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[-</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.35</span><span class="sc50">,</span><span class="sc45">0.35</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.6</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">    
+    </span><span class="sc43">// Lower Left Arm</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">2.9</span><span class="sc50">,-</span><span class="sc45">1.45</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[-</span><span class="sc45">95</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.3</span><span class="sc50">,</span><span class="sc45">0.3</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">//Left Elbow</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">2.85</span><span class="sc50">,</span><span class="sc45">0.65</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Hips</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">1</span><span class="sc50">,-</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">2</span><span class="sc50">,</span><span class="sc45">2</span><span class="sc50">,</span><span class="sc45">1.</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.1</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">3</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc43">// Left Leg</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">1.45</span><span class="sc50">,</span><span class="sc45">1.7</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc45">90</span><span class="sc50">)/</span><span class="sc45">180</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">2</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.1</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">    
+    </span><span class="sc43">// Right Leg</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[-</span><span class="sc45">0.55</span><span class="sc50">,</span><span class="sc45">1.6</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.rotate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,(</span><span class="sc46">kval</span><span class="sc50">)/</span><span class="sc45">140</span><span class="sc50">*</span><span class="sc46">Math.PI</span><span class="sc50">,[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">2</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">0.1</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">0.9</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">    
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">ball</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">  
+    </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc46">xval</span><span class="sc50">,</span><span class="sc46">yval</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">]);</span><span class="sc43">// </span><span class="sc41">
+    </span><span class="sc46">mat4.scale</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,[</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">,</span><span class="sc45">0.8</span><span class="sc50">]);</span><span class="sc41">
+    </span><span class="sc46">currentColor</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">];</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">objectNum</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">Number</span><span class="sc50">(</span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"object"</span><span class="sc50">).</span><span class="sc46">value</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc46">objectNum</span><span class="sc50">].</span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41"> </span><span class="sc43">// sets up modelview and normal matrices</span><span class="sc41">
+    </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41"> 
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">//Start</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">pushMatrix</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">matrixStack.push</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">mat4.clone</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">//Stop</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">popMatrix</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">modelview</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">matrixStack.pop</span><span class="sc50">();</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">&lt;!-- As is no changes --&gt;</span><span class="sc41">
+</span><span class="sc44">/**
+*  Create one of the basic objects.  The modelData holds the data for
+*  an IFS using the structure from basic-objects-IFS.js.  This function
+*  creates VBOs to hold the coordinates, normal vectors, and indices
+*  from the IFS, and it loads the data into those buffers.  The function
+*  creates a new object whose properties are the identifies of the
+*  VBOs.  The new object also has a function, render(), that can be called to
+*  render the object, using all the data from the buffers.  That object
+*  is returned as the value of the function.  (The second parameter,
+*  xtraTranslate, is there because this program was ported from a Java
+*  version where cylinders were created in a different position, with
+*  the base on the xy-plane instead of with their center at the origin.
+*  The xtraTranslate parameter is a 3-vector that is applied as a
+*  translation to the rendered object.  It is used to move the cylinders
+*  into the position expected by the code that was ported from Java.)
+*/</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc46">modelData</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">xtraTranslate</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">model</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">{};</span><span class="sc41">
+    </span><span class="sc46">model.coordsBuffer</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.createBuffer</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">model.normalBuffer</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.createBuffer</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">model.indexBuffer</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.createBuffer</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">model.count</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">modelData.indices.length</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">xtraTranslate</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">model.xtraTranslate</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">xtraTranslate</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">else</span><span class="sc41">
+    </span><span class="sc46">model.xtraTranslate</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">null</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">gl.bindBuffer</span><span class="sc50">(</span><span class="sc46">gl.ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">model.coordsBuffer</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.bufferData</span><span class="sc50">(</span><span class="sc46">gl.ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">modelData.vertexPositions</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.STATIC_DRAW</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.bindBuffer</span><span class="sc50">(</span><span class="sc46">gl.ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">model.normalBuffer</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.bufferData</span><span class="sc50">(</span><span class="sc46">gl.ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">modelData.vertexNormals</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.STATIC_DRAW</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.bindBuffer</span><span class="sc50">(</span><span class="sc46">gl.ELEMENT_ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">model.indexBuffer</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.bufferData</span><span class="sc50">(</span><span class="sc46">gl.ELEMENT_ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">modelData.indices</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.STATIC_DRAW</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">model.render</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">function</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> 
+        </span><span class="sc46">gl.bindBuffer</span><span class="sc50">(</span><span class="sc46">gl.ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">this.coordsBuffer</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.vertexAttribPointer</span><span class="sc50">(</span><span class="sc46">a_coords_loc</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">3</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.FLOAT</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.bindBuffer</span><span class="sc50">(</span><span class="sc46">gl.ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">this.normalBuffer</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.vertexAttribPointer</span><span class="sc50">(</span><span class="sc46">a_normal_loc</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">3</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.FLOAT</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.uniform4fv</span><span class="sc50">(</span><span class="sc46">u_material.diffuseColor</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">currentColor</span><span class="sc50">);</span><span class="sc41">
+        
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">this.xtraTranslate</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc46">pushMatrix</span><span class="sc50">();</span><span class="sc41">
+            </span><span class="sc46">mat4.translate</span><span class="sc50">(</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">modelview</span><span class="sc50">,</span><span class="sc46">this.xtraTranslate</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+        </span><span class="sc46">gl.uniformMatrix4fv</span><span class="sc50">(</span><span class="sc46">u_modelview</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">modelview</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">mat3.normalFromMat4</span><span class="sc50">(</span><span class="sc46">normalMatrix</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">modelview</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.uniformMatrix3fv</span><span class="sc50">(</span><span class="sc46">u_normalMatrix</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">normalMatrix</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.bindBuffer</span><span class="sc50">(</span><span class="sc46">gl.ELEMENT_ARRAY_BUFFER</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">this.indexBuffer</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl.drawElements</span><span class="sc50">(</span><span class="sc46">gl.TRIANGLES</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">this.count</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.UNSIGNED_SHORT</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">);</span><span class="sc41">
+        
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">this.xtraTranslate</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc46">popMatrix</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">return</span><span class="sc41"> </span><span class="sc46">model</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc42">/* Creates a program for use in the WebGL context gl, and returns the
+* identifier for that program.  If an error occurs while compiling or
+* linking the program, an exception of type String is thrown.  The error
+* string contains the compilation or linking error.  If no error occurs,
+* the program identifier is the return value of the function.
+*    The second and third parameters are the id attributes for &lt;script&gt;
+* elementst that contain the source code for the vertex and fragment
+* shaders.
+*/</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">createProgram</span><span class="sc50">(</span><span class="sc46">gl</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">vertexShaderID</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">fragmentShaderID</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">getTextContent</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">elementID</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">element</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc46">elementID</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">node</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">element.firstChild</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">str</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc48">""</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">while</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">node</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">node.nodeType</span><span class="sc41"> </span><span class="sc50">==</span><span class="sc41"> </span><span class="sc45">3</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc43">// this is a text node</span><span class="sc41">
+            </span><span class="sc46">str</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc46">node.textContent</span><span class="sc50">;</span><span class="sc41">
+            </span><span class="sc46">node</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">node.nextSibling</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+        </span><span class="sc47">return</span><span class="sc41"> </span><span class="sc46">str</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">try</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">vertexShaderSource</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">getTextContent</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">vertexShaderID</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">fragmentShaderSource</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">getTextContent</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">fragmentShaderID</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">catch</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">e</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">throw</span><span class="sc41"> </span><span class="sc48">"Error: Could not get shader source code from script elements."</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">vsh</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.createShader</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">gl.VERTEX_SHADER</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.shaderSource</span><span class="sc50">(</span><span class="sc46">vsh</span><span class="sc50">,</span><span class="sc46">vertexShaderSource</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.compileShader</span><span class="sc50">(</span><span class="sc46">vsh</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc41"> </span><span class="sc50">!</span><span class="sc41"> </span><span class="sc46">gl.getShaderParameter</span><span class="sc50">(</span><span class="sc46">vsh</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.COMPILE_STATUS</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">throw</span><span class="sc41"> </span><span class="sc48">"Error in vertex shader:  "</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">gl.getShaderInfoLog</span><span class="sc50">(</span><span class="sc46">vsh</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">fsh</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.createShader</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">gl.FRAGMENT_SHADER</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.shaderSource</span><span class="sc50">(</span><span class="sc46">fsh</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">fragmentShaderSource</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.compileShader</span><span class="sc50">(</span><span class="sc46">fsh</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc41"> </span><span class="sc50">!</span><span class="sc41"> </span><span class="sc46">gl.getShaderParameter</span><span class="sc50">(</span><span class="sc46">fsh</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.COMPILE_STATUS</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">throw</span><span class="sc41"> </span><span class="sc48">"Error in fragment shader:  "</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">gl.getShaderInfoLog</span><span class="sc50">(</span><span class="sc46">fsh</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">prog</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.createProgram</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">gl.attachShader</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc46">vsh</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.attachShader</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">fsh</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.linkProgram</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc41"> </span><span class="sc50">!</span><span class="sc41"> </span><span class="sc46">gl.getProgramParameter</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">gl.LINK_STATUS</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">throw</span><span class="sc41"> </span><span class="sc48">"Link error in program:  "</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">gl.getProgramInfoLog</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">return</span><span class="sc41"> </span><span class="sc46">prog</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+
+</span><span class="sc42">/* Initialize the WebGL context.  Called from init() */</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">initGL</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">prog</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createProgram</span><span class="sc50">(</span><span class="sc46">gl</span><span class="sc50">,</span><span class="sc48">"vshader-source"</span><span class="sc50">,</span><span class="sc48">"fshader-source"</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.useProgram</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.enable</span><span class="sc50">(</span><span class="sc46">gl.DEPTH_TEST</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc46">a_coords_loc</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41">  </span><span class="sc46">gl.getAttribLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"a_coords"</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">a_normal_loc</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41">  </span><span class="sc46">gl.getAttribLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"a_normal"</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">u_modelview</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"modelview"</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">u_projection</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"projection"</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">u_normalMatrix</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41">  </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"normalMatrix"</span><span class="sc50">);</span><span class="sc41">
+ 
+    </span><span class="sc46">gl.enableVertexAttribArray</span><span class="sc50">(</span><span class="sc46">a_coords_loc</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.enableVertexAttribArray</span><span class="sc50">(</span><span class="sc46">a_normal_loc</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc46">mat4.perspective</span><span class="sc50">(</span><span class="sc46">projection</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">Math.PI</span><span class="sc50">/</span><span class="sc45">10</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">10</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.uniformMatrix4fv</span><span class="sc50">(</span><span class="sc46">u_projection</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">projection</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc46">u_material</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">diffuseColor</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"material.diffuseColor"</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc46">specularColor</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"material.specularColor"</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc46">emissiveColor</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"material.emissiveColor"</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc46">specularExponent</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"material.specularExponent"</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc50">};</span><span class="sc41">
+    
+    </span><span class="sc46">u_lights</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">Array</span><span class="sc50">(</span><span class="sc45">4</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">for</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">&lt;</span><span class="sc41"> </span><span class="sc45">4</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc50">++)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">enabled</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"lights["</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc48">"].enabled"</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc46">position</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"lights["</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc48">"].position"</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">gl.getUniformLocation</span><span class="sc50">(</span><span class="sc46">prog</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc48">"lights["</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc48">"].color"</span><span class="sc50">)</span><span class="sc41">            
+        </span><span class="sc50">};</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    
+    </span><span class="sc46">gl.uniform3f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_material.specularColor</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0.1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0.1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0.1</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  </span><span class="sc43">// specular properties don't change</span><span class="sc41">
+    </span><span class="sc46">gl.uniform1f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_material.specularExponent</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">16</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">gl.uniform3f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_material.emissiveColor</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">);</span><span class="sc41">  </span><span class="sc43">// default, will be changed temporarily for some objects</span><span class="sc41">
+
+    </span><span class="sc47">for</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">&lt;</span><span class="sc41"> </span><span class="sc45">4</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc50">++)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> </span><span class="sc43">// set defaults for lights</span><span class="sc41">
+        </span><span class="sc46">gl.uniform1i</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">].</span><span class="sc46">enabled</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41"> 
+        </span><span class="sc46">gl.uniform4f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">].</span><span class="sc46">position</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">        
+        </span><span class="sc46">gl.uniform3f</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">u_lights</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">].</span><span class="sc46">color</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41"> 
+    </span><span class="sc50">}</span><span class="sc41">
+    
+    </span><span class="sc43">//Objects</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">Array</span><span class="sc50">(</span><span class="sc45">6</span><span class="sc50">);</span><span class="sc41">              
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">0</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">cube</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">1</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">uvSphere</span><span class="sc50">(</span><span class="sc45">1</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">2</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">uvCylinder</span><span class="sc50">(),[</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">3</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">uvCone</span><span class="sc50">(),[</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,.</span><span class="sc45">5</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">4</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">uvTorus</span><span class="sc50">(</span><span class="sc45">0.65</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">64</span><span class="sc50">,</span><span class="sc45">24</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">for</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc41"> </span><span class="sc50">&lt;</span><span class="sc41"> </span><span class="sc46">teapotModel.vertexPositions.length</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc46">i</span><span class="sc50">++)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">teapotModel.vertexPositions</span><span class="sc50">[</span><span class="sc46">i</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">*=</span><span class="sc41"> </span><span class="sc45">0.05</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc43">// scale teapot model to a size that matches other objects</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc46">objects</span><span class="sc50">[</span><span class="sc45">5</span><span class="sc50">]</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">createModel</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">teapotModel</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41"> 
+
+</span><span class="sc43">//--------------------------------- animation framework ------------------------------</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">animating</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">frame</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">animating</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">frameNumber</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc45">1</span><span class="sc50">;</span><span class="sc41">
+
+        </span><span class="sc43">// Positions of the soccer ball       </span><span class="sc41">
+        </span><span class="sc46">xval</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc45">0.1</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc46">yval</span><span class="sc41"> </span><span class="sc50">-=</span><span class="sc41"> </span><span class="sc45">0.1</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc46">kval</span><span class="sc41"> </span><span class="sc50">-=</span><span class="sc45">6</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">xval</span><span class="sc41"> </span><span class="sc50">&gt;</span><span class="sc41"> </span><span class="sc45">8.5</span><span class="sc41"> </span><span class="sc50">||</span><span class="sc41"> </span><span class="sc46">yval</span><span class="sc41"> </span><span class="sc50">&lt;</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc45">8.5</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc46">xval</span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc45">0.7</span><span class="sc50">;</span><span class="sc41">
+            </span><span class="sc46">yval</span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc45">2.1</span><span class="sc50">;</span><span class="sc41">
+            </span><span class="sc46">kval</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">90</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">  
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">kval</span><span class="sc41"> </span><span class="sc50">&lt;</span><span class="sc41"> </span><span class="sc45">45</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc46">kval</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">45</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc43">// Don't overextend the soccer ball</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+        </span><span class="sc46">draw</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc46">requestAnimationFrame</span><span class="sc50">(</span><span class="sc46">frame</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">setAnimating</span><span class="sc50">(</span><span class="sc46">run</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">run</span><span class="sc41"> </span><span class="sc50">!=</span><span class="sc41"> </span><span class="sc46">animating</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">animating</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">run</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">animating</span><span class="sc50">)</span><span class="sc41">
+        </span><span class="sc46">requestAnimationFrame</span><span class="sc50">(</span><span class="sc46">frame</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">//-----------------------------Initialize Function--------------------------------------------</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">init</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">try</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">canvas</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"webglcanvas"</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">gl</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">canvas.getContext</span><span class="sc50">(</span><span class="sc48">"webgl"</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">||</span><span class="sc41"> 
+        </span><span class="sc46">canvas.getContext</span><span class="sc50">(</span><span class="sc48">"experimental-webgl"</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc41"> </span><span class="sc50">!</span><span class="sc41"> </span><span class="sc46">gl</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc47">throw</span><span class="sc41"> </span><span class="sc48">"Browser does not support WebGL"</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">catch</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">e</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"canvas-holder"</span><span class="sc50">).</span><span class="sc46">innerHTML</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41">
+        </span><span class="sc48">"&lt;p&gt;Sorry, could not get a WebGL graphics context.&lt;/p&gt;"</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">return</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">try</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">initGL</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">catch</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">e</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"canvas-holder"</span><span class="sc50">).</span><span class="sc46">innerHTML</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41">
+        </span><span class="sc48">"&lt;p&gt;Sorry, could not initialize the WebGL graphics context:"</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc46">e</span><span class="sc41"> </span><span class="sc50">+</span><span class="sc41"> </span><span class="sc48">"&lt;/p&gt;"</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">return</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"animCheck"</span><span class="sc50">).</span><span class="sc46">checked</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"object"</span><span class="sc50">).</span><span class="sc46">value</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc48">"0"</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"object"</span><span class="sc50">).</span><span class="sc46">onchange</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">draw</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"reset"</span><span class="sc50">).</span><span class="sc46">onclick</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">function</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc43">// Reset button</span><span class="sc41">
+        </span><span class="sc46">rotator.setView</span><span class="sc50">(</span><span class="sc45">17</span><span class="sc50">,[</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">2</span><span class="sc50">]);</span><span class="sc41">
+        </span><span class="sc46">frameNumber</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">0</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc43">// Initialize soccer ball positions      </span><span class="sc41">
+        </span><span class="sc46">xval</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc45">0.7</span><span class="sc50">;</span><span class="sc41"> 
+        </span><span class="sc46">yval</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">-</span><span class="sc45">2.1</span><span class="sc50">;</span><span class="sc41"> 
+        </span><span class="sc43">// Initialize leg position</span><span class="sc41">
+        </span><span class="sc46">kval</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">80</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc46">animating</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"animCheck"</span><span class="sc50">).</span><span class="sc46">checked</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc46">draw</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+
+    </span><span class="sc43">// This controls the zoom and initial placement</span><span class="sc41">
+    </span><span class="sc46">rotator</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">TrackballRotator</span><span class="sc50">(</span><span class="sc46">canvas</span><span class="sc50">,</span><span class="sc47">function</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(!</span><span class="sc46">animating</span><span class="sc50">)</span><span class="sc41">
+        </span><span class="sc46">draw</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc50">},</span><span class="sc45">17</span><span class="sc50">,[</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1</span><span class="sc50">,</span><span class="sc45">2</span><span class="sc50">]);</span><span class="sc41"> 
+    </span><span class="sc46">draw</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    
+</span><span class="sc1">&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/head&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;body</span><span class="sc8"> </span><span class="sc3">onload</span><span class="sc8">=</span><span class="sc6">"init()"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;h2&gt;</span><span class="sc0">Kicking an Object</span><span class="sc1">&lt;/h2&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0"> Creator: Alexander Szelestey</span><span class="sc1">&lt;br&gt;</span><span class="sc0">
+Date: 03/05/2020</span><span class="sc1">&lt;br&gt;</span><span class="sc0">
+Class: CMIT 405</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc19">message</span><span class="sc1">&gt;</span><span class="sc0">Rotate image with mouse.</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+
+</span><span class="sc1">&lt;noscript&gt;&lt;hr&gt;&lt;h3&gt;</span><span class="sc0">This page requires Javascript and a web browser that supports WebGL</span><span class="sc1">&lt;/h3&gt;&lt;hr&gt;&lt;/noscript&gt;</span><span class="sc0">
+
+</span><span class="sc1">&lt;div</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8"> = </span><span class="sc6">"canvas-holder"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;canvas</span><span class="sc8"> </span><span class="sc3">width</span><span class="sc8">=</span><span class="sc5">700</span><span class="sc8"> </span><span class="sc3">height</span><span class="sc8">=</span><span class="sc5">700</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"webglcanvas"</span><span class="sc8"> </span><span class="sc3">style</span><span class="sc8">=</span><span class="sc6">"background: url('grass3.png')"</span><span class="sc1">&gt;&lt;/canvas&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/div&gt;</span><span class="sc0">
+
+</span><span class="sc1">&lt;div</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8"> = </span><span class="sc6">"tools"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;label&gt;&lt;input</span><span class="sc8"> </span><span class="sc3">type</span><span class="sc8">=</span><span class="sc6">"checkbox"</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"animCheck"</span><span class="sc8"> </span><span class="sc3">onchange</span><span class="sc8">=</span><span class="sc6">"setAnimating(this.checked)"</span><span class="sc1">&gt;</span><span class="sc0">Kick Object</span><span class="sc1">&lt;/label&gt;&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;button</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"reset"</span><span class="sc8"> </span><span class="sc1">&gt;</span><span class="sc0">Reset</span><span class="sc1">&lt;/button&gt;&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;label&gt;</span><span class="sc0">Object: </span><span class="sc1">&lt;select</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"object"</span><span class="sc1">&gt;</span><span class="sc0">
+    </span><span class="sc1">&lt;option</span><span class="sc8"> </span><span class="sc3">value</span><span class="sc8">=</span><span class="sc6">"0"</span><span class="sc1">&gt;</span><span class="sc0">Cube</span><span class="sc1">&lt;/option&gt;</span><span class="sc0">
+    </span><span class="sc1">&lt;option</span><span class="sc8"> </span><span class="sc3">value</span><span class="sc8">=</span><span class="sc6">"1"</span><span class="sc1">&gt;</span><span class="sc0">Sphere</span><span class="sc1">&lt;/option&gt;</span><span class="sc0">
+    </span><span class="sc1">&lt;option</span><span class="sc8"> </span><span class="sc3">value</span><span class="sc8">=</span><span class="sc6">"2"</span><span class="sc1">&gt;</span><span class="sc0">Cylinder</span><span class="sc1">&lt;/option&gt;</span><span class="sc0">
+    </span><span class="sc1">&lt;option</span><span class="sc8"> </span><span class="sc3">value</span><span class="sc8">=</span><span class="sc6">"3"</span><span class="sc1">&gt;</span><span class="sc0">Cone</span><span class="sc1">&lt;/option&gt;</span><span class="sc0">
+    </span><span class="sc1">&lt;option</span><span class="sc8"> </span><span class="sc3">value</span><span class="sc8">=</span><span class="sc6">"4"</span><span class="sc1">&gt;</span><span class="sc0">Torus</span><span class="sc1">&lt;/option&gt;</span><span class="sc0">
+    </span><span class="sc1">&lt;option</span><span class="sc8"> </span><span class="sc3">value</span><span class="sc8">=</span><span class="sc6">"5"</span><span class="sc1">&gt;</span><span class="sc0">Teapot</span><span class="sc1">&lt;/option&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/select&gt;&lt;/label&gt;&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/div&gt;</span><span class="sc0">
+
+</span><span class="sc1">&lt;/body&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/html&gt;</span><span class="sc0">
+</span></div></body>
+</html>
